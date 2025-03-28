@@ -1019,6 +1019,25 @@ impl PyInstrument {
         res.into_pyarray_bound(py)
     }
 
+    /// mac(self, inp_chans, out_chans, /)
+    /// --
+    ///
+    /// Drive arbitrary voltage to the input channels and simultaneously read current from output channels.
+    ///
+    /// :param list inp_chans: A list of doubles containing the configuration of the selected
+    ///                    channels in the form ``(chan number, input voltage)``
+    /// :param out_chans: An array of uint64s or any Iterable with elements that can
+    ///                  be converted into uint64
+    /// :return: The current of each individual channel along the ``out_chans`` line
+    /// :rtype: A numpy f32 array
+    fn mac<'py>(&mut self, py: Python<'py>, inp_chans: Vec<(usize, f32)>,
+        out_chans: Vec<usize>) -> Bound<'py, PyArray<f32, Ix1>> {
+
+        let res = self._instrument.mac(&inp_chans, &out_chans).unwrap();
+
+        res.into_pyarray_bound(py)
+    }
+
     /// read_all(self, vread, order, /)
     /// --
     ///
